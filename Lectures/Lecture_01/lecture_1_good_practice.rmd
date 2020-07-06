@@ -1,5 +1,5 @@
 ---
-title: "Advanced R:\nLecture 1 – good coding practices"
+title: " "
 author: "January Weiner"
 date: "`r Sys.Date()`"
 output:
