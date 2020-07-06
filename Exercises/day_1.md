@@ -28,7 +28,7 @@
     floating numbers. (e.g. %==% should be a function taking two arguments
     to compare)
 
-# Session 4: tidyverse
+# Session 2/1: reading in tidyverse
 
  1. Which package from tidyverse allows you to read Excel files? Read the
     World Inequality Database file (`WIID_19Dec2018.xlsx`). This is a
@@ -43,6 +43,8 @@
     wealth. The Gini coefficient ranges from 0 (perfect equality) to 100%
     (perfect inequality).
 
+# Session 2/2: pipes
+
  3. Which countries have the highest / lowest Gini coefficient? Which
     countries had the highest / lowest Gini coefficient in 2016? Where is
     Germany on that scale?
@@ -56,6 +58,8 @@
      * *reasonably* remove all incomplete rows (use `drop_na`)
      * summarize data by continent and by country
 
+# Session 2/3: advanced tidyverse
+
  2. Construct a tidyverse pipe with the following steps:
 
      1. Select only entries from 2016
@@ -65,13 +69,14 @@
      4. Use the `gather` function to create a long version of the table 
      5. Remove rows containing NA's using the `drop_na` function
 
-  3. Load the world energy use data (`world_energy.tsv`). Change it from
-     wide to long format.
+ 3. Using `group_by`, `summary` and `arrange` find out for which year there
+    are the most data? For which year the overall average gini coefficient
+    is highest / lowest? (mind the NA's!). Plot the average Gini
+    coefficient over time.
 
-  4. Using built-in data sets from `tidyr`, `table{1,2,3,4a,4b,5}` convert
-     them from wide to long and viceversa. Use `separate` on `table5` to
-     change `rate` into `cases` and `population`.
+ 3. Load the world energy use data (`world_energy.tsv`). Change it from
+    wide to long format.
 
-  5. Create a new markdown document in RStudio. The template contains
-     already a few examples. Generate PDF and docx; create a header, a list,
-     insert your own code fragment.
+ 4. Using built-in data sets from `tidyr`, `table{1,2,3,4a,4b,5}` convert
+    them from wide to long and viceversa. Use `separate` on `table5` to
+    change `rate` into `cases` and `population`.

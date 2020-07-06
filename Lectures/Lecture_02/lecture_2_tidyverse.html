@@ -209,6 +209,48 @@ slide:not(.current) .plotly.html-widget{
 <li>never load <code>plyr</code> after <code>dplyr</code></li>
 </ul>
 
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Introducing tibbles</h2></hgroup><article  id="introducing-tibbles" class="smaller ">
+
+</article></slide><slide class=""><hgroup><h2>So many ways to skin a cat</h2></hgroup><article  id="so-many-ways-to-skin-a-cat" class="smaller ">
+
+<p>data.frame has so many problems. Luckily, there are also so many solutions.</p>
+
+<ul>
+<li>data.table / DT</li>
+<li>DataFrame</li>
+<li>colorDF ;-)</li>
+<li>tibble (tidyverse, formerly known as data_frame)</li>
+<li>special objects (ExpressionSet, limma/edgeR objects etc.)</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>What is special about tibble</h2></hgroup><article  id="what-is-special-about-tibble" class="smaller ">
+
+<ul>
+<li>Hadley Wickham hates row names</li>
+<li>tbl[,3] returns a tbl rather than a vector</li>
+<li>nicer printing (but&#8230; colorDF is better ;-)</li>
+<li>extra properties (<code>group_by</code> etc.)</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Fine, but&#8230;</h2></hgroup><article  id="fine-but..." class="smaller ">
+
+<p>If you want to view more than the default portion of the tibble, do</p>
+
+<pre class = 'prettyprint lang-r'>print(starwars, n=Inf, width=Inf)</pre>
+
+<p>Row names: convert them to a column, use filter() instead of <code>[</code></p>
+
+</article></slide><slide class=""><hgroup><h2>Reading data with readr</h2></hgroup><article  id="reading-data-with-readr" class="smaller ">
+
+<ul>
+<li>read_{tsv,csv,&#8230;}, write…</li>
+<li>better, cleaner, faster</li>
+<li>explicit</li>
+<li>will never turn a string into a factor</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Exercise Session 2/1</h2></hgroup><article  id="exercise-session-21" class="smaller ">
+
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Introducing Pipes</h2></hgroup><article  id="introducing-pipes" class="smaller ">
 
 </article></slide><slide class=""><hgroup><h2>Introducing Pipes</h2></hgroup><article  id="introducing-pipes-1" class="smaller ">
@@ -283,48 +325,7 @@ df %&gt;% head</pre>
 <ul>
 <li>aliases (extract, set_names etc.)</li>
 <li><code>%$%</code> operator (pipe version of <code>attach</code>)</li>
-</ul>
-
-</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Introducing tibbles</h2></hgroup><article  id="introducing-tibbles" class="smaller ">
-
-</article></slide><slide class=""><hgroup><h2>So many ways to skin a cat</h2></hgroup><article  id="so-many-ways-to-skin-a-cat" class="smaller ">
-
-<p>data.frame has so many problems. Luckily, there are also so many solutions.</p>
-
-<ul>
-<li>data.table / DT</li>
-<li>DataFrame</li>
-<li>colorDF ;-)</li>
-<li>tibble (tidyverse, formerly known as data_frame)</li>
-<li>special objects (ExpressionSet, limma/edgeR objects etc.)</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>What is special about tibble</h2></hgroup><article  id="what-is-special-about-tibble" class="smaller ">
-
-<ul>
-<li>Hadley Wickham hates row names</li>
-<li>tbl[,3] returns a tbl rather than a vector</li>
-<li>nicer printing</li>
-<li>extra properties (<code>group_by</code> etc.)</li>
-</ul>
-
-<p>(Demo)</p>
-
-</article></slide><slide class=""><hgroup><h2>Fine, but&#8230;</h2></hgroup><article  id="fine-but..." class="smaller ">
-
-<p>If you want to view more than the default portion of the tibble, do</p>
-
-<pre class = 'prettyprint lang-r'>print(starwars, n=Inf, width=Inf)</pre>
-
-<p>Row names: convert them to a column, use filter() instead of <code>[</code></p>
-
-</article></slide><slide class=""><hgroup><h2>Reading data with readr</h2></hgroup><article  id="reading-data-with-readr" class="smaller ">
-
-<ul>
-<li>read_{tsv,csv,&#8230;}, write…</li>
-<li>better, cleaner, faster</li>
-<li>explicit</li>
-<li>will never turn a string into a factor</li>
+<li><code>%&lt;&gt;%</code> operator (instant assignment)</li>
 </ul>
 
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>dplyr</h2></hgroup><article  id="dplyr" class="smaller ">
@@ -373,13 +374,15 @@ mtcars %&gt;% filter(hp &gt; 100 &amp; cyl &lt; 8)</pre>
 
 <pre >mtcars %&gt;% arrange(mpg)</pre>
 
+</article></slide><slide class=""><hgroup><h2>Exercise Session 2/2</h2></hgroup><article  id="exercise-session-22" class="smaller ">
+
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>tidyr</h2></hgroup><article  id="tidyr" class="smaller ">
 
 </article></slide><slide class=""><hgroup><h2>Long vs wide data</h2></hgroup><article  id="long-vs-wide-data" class="smaller ">
 
 <p><code>gather()</code>, <code>spread()</code></p>
 
-<p>(Demo)</p>
+<p>(demo)</p>
 
 </article></slide><slide class=""><hgroup><h2>group_by</h2></hgroup><article  id="group_by" class="smaller ">
 
@@ -396,8 +399,6 @@ mtcars %&gt;% filter(hp &gt; 100 &amp; cyl &lt; 8)</pre>
 
 <p>You can then use several other functions.</p>
 
-<p>(Demo)</p>
-
 </article></slide><slide class=""><hgroup><h2>Use with caution!</h2></hgroup><article  id="use-with-caution" class="smaller ">
 
 <p>While tidyverse is great for interactive work, you should use it with caution in your packages:</p>
@@ -413,8 +414,6 @@ mtcars %&gt;% filter(hp &gt; 100 &amp; cyl &lt; 8)</pre>
 
 <p>What happens when df contains <code>cols</code>?</p>
 
-<p>(Demo)</p>
-
 </article></slide><slide class=""><hgroup><h2>Solution</h2></hgroup><article  id="solution" class="smaller ">
 
 <p>Be wary of tidyverse shortcuts. Always assume the worst case scenario and be explicit in your code:</p>
@@ -422,6 +421,8 @@ mtcars %&gt;% filter(hp &gt; 100 &amp; cyl &lt; 8)</pre>
 <pre class = 'prettyprint lang-r'># make sure you select columns from variable 
 # and not by name
 df %&lt;&gt;% select(!!cols)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Exercise Session 2/3</h2></hgroup><article  id="exercise-session-23" class="smaller ">
 
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Mapping</h2></hgroup><article  id="mapping" class="smaller ">
 

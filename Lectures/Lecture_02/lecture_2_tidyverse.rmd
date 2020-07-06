@@ -9,6 +9,11 @@ output:
     css: "../files/style.css"
 ---
 
+```{r echo=FALSE,results="hide",message=FALSE,warning=FALSE}
+library(tidyverse)
+```
+
+
 # Tidyverse
 
 ## Why tidyverse
@@ -55,16 +60,51 @@ output:
  * some packages (e.g. `magrittr`) need to be loaded separately
  * never load `plyr` after `dplyr`
 
+# Introducing tibbles
+
+## So many ways to skin a cat
+
+data.frame has so many problems. Luckily, there are also so many solutions.
+
+ * data.table / DT
+ * DataFrame
+ * colorDF ;-)
+ * tibble (tidyverse, formerly known as data\_frame)
+ * special objects (ExpressionSet, limma/edgeR objects etc.)
+
+## What is special about tibble
+
+ * Hadley Wickham hates row names
+ * tbl[,3] returns a tbl rather than a vector
+ * nicer printing (but... colorDF is better ;-)
+ * extra properties (`group_by` etc.)
+
+## Fine, but...
+
+If you want to view more than the default portion of the tibble, do
+
+```{r,results="hide"}
+print(starwars, n=Inf, width=Inf)
+```
+
+Row names: convert them to a column, use filter() instead of `[`
+
+## Reading data with readr
+
+ * read\_{tsv,csv,...}, write…
+ * better, cleaner, faster
+ * explicit
+ * will never turn a string into a factor
+
+
+## Exercise Session 2/1
+
 # Introducing Pipes
 
 ## Introducing Pipes
 
 Remember? In R, almost everything is a function, but some functions are special: they
 look like operators.
-
-```{r echo=FALSE,results="hide",message=FALSE,warning=FALSE}
-library(tidyverse)
-```
 
 ```{r echo=TRUE,results="markdown"}
 vec <- 1:10
@@ -131,45 +171,6 @@ However, there is more to this package.
  * `%<>%` operator (instant assignment)
 
 
-# Introducing tibbles
-
-## So many ways to skin a cat
-
-data.frame has so many problems. Luckily, there are also so many solutions.
-
- * data.table / DT
- * DataFrame
- * colorDF ;-)
- * tibble (tidyverse, formerly known as data\_frame)
- * special objects (ExpressionSet, limma/edgeR objects etc.)
-
-## What is special about tibble
-
- * Hadley Wickham hates row names
- * tbl[,3] returns a tbl rather than a vector
- * nicer printing (but... colorDF is better ;-)
- * extra properties (`group_by` etc.)
-
-(Demo)
-
-## Fine, but...
-
-If you want to view more than the default portion of the tibble, do
-
-```{r,results="hide"}
-print(starwars, n=Inf, width=Inf)
-```
-
-Row names: convert them to a column, use filter() instead of `[`
-
-## Reading data with readr
-
- * read\_{tsv,csv,...}, write…
- * better, cleaner, faster
- * explicit
- * will never turn a string into a factor
-
-
 
 # dplyr
 
@@ -215,13 +216,15 @@ Sort the rows of the data
 
     mtcars %>% arrange(mpg)
 
+## Exercise Session 2/2
+
 # tidyr
 
 ## Long vs wide data
 
  `gather()`, `spread()`
 
-(Demo)
+(demo)
 
 ## group\_by
 
@@ -235,9 +238,6 @@ identical(as.data.frame(table2),
 ```
 
 You can then use several other functions.
-
-(Demo)
-
 
 ## Use with caution!
 
@@ -257,8 +257,6 @@ foo <- function(df) {
 
 What happens when df contains `cols`?
 
-(Demo)
-
 ## Solution
 
 Be wary of tidyverse shortcuts. Always assume the worst case scenario and
@@ -269,6 +267,9 @@ be explicit in your code:
 # and not by name
 df %<>% select(!!cols)
 ```
+
+
+## Exercise Session 2/3
 
 # Mapping
 
