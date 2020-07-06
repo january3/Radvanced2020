@@ -1,0 +1,363 @@
+---
+title: "Advanced R:\nLecture 1 – good coding practices"
+author: "January Weiner"
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+    css: "../files/style.css"
+---
+
+# 
+
+## #About
+
+January Weiner `<january.weiner@gmail.com>`
+
+Core Unit Bioinformatics, Berlin Institute of Health
+
+
+## Course materials
+
+https://github.com/january3/Radvanced2020
+
+## What I want to give you
+
+ * Make R friendly
+ * Indoctrination
+ * Ability to write code for others
+ * Practical tips and tricks
+
+## How the course will look like
+
+ * Lectures
+ * Excercises
+ * Scripts
+ * Your own projects
+
+
+# Why "good coding practices"?
+
+
+## Rule #1: Language is for communication
+
+Code is a tool of your science, science is all about communication, therefore:
+
+ * Your code will be inspected by others
+ * Documentation is not only for you
+ * Coding is a part of your science, then make it so!
+ * Reproducibility matters
+
+ 
+## Literate programming (Donald E. Knuth)
+
+I believe that the time is ripe for significantly better documentation of
+programs, and that we can best achieve this by considering programs to be
+works of literature. Hence, my title: "Literate Programming."
+
+Let us change our traditional attitude to the construction of programs:
+Instead of imagining that our main task is to instruct a computer what to
+do, let us concentrate rather on explaining to human beings what we want a
+computer to do.
+
+## Literate Programming (Donald E. Knuth)
+
+The practitioner of literate programming can be regarded as an essayist,
+whose main concern is with exposition and excellence of style. Such an
+author, with thesaurus in hand, chooses the names of variables carefully
+and explains what each variable means. He or she strives for a program that
+is comprehensible because its concepts have been introduced in an order
+that is best for human understanding, using a mixture of formal and
+informal methods that reinforce each other.
+ 
+
+## Rule #2: Document your code
+
+*Documentation is like pizza: if it's good, it's really, really good. If
+it's bad, it's still better than nothing.* [Anonymous]
+
+ * make documenting your code as easy as possible
+ * first document the why, then the what and the how
+ * make documentation easily searchable (use grep, find & co)
+
+## Rule #3: Stick to conventions
+
+ * adopt a naming and formatting style convention, and stick to it
+ * keep the same names for variables over and over
+ * keep the same project / workspace structure
+
+## Rule #4: Keep your code clean
+
+ * meaningful variable names
+ * refactor your code
+ * organize your code (packages!)
+ * keep your functions short
+ * keep a line length of approximately 80 chars
+
+## Rule #5: Simplify!
+
+ * make your code as simple as possible
+ * make your functions versatile and simple
+ * use simple data types if possible
+ * don't overdo it!
+
+## Rule #6: You never know
+
+ * what your code evolves into
+ * when you will need to publish it
+ * when someone will want to see it
+
+…so prepare in advance!
+ 
+
+# Specifics (the gory details)
+
+## Before you start
+
+ * think what you want to do
+ * make a plan, use paper and pencil
+ * use google and stackoverflow, do not reinvent the wheel
+ * learn to use (r)markdown
+
+
+## How to write code
+
+ * use a naming convention (eg. with.period, with\_underscore or camelCase)
+ * strive for meaningful variables…
+ * …but keep them concise
+ * make function and variable names easy to distinguish (e.g. noun vs verb
+   or use a prefix)
+ * make it easy to distinguish less important (e.g. local) variables and
+   functions from those which are important
+ * package your code in functions, don't use globals
+
+##
+
+*Firstly, don't call your matrix 'matrix'. Would you call your dog 'dog'?
+Anyway, it might clash with the function 'matrix'.*
+
+– Barry Rowlingson, R-help (October 2004)
+
+
+## Keep your syntax clean and standard
+
+ * there are many coding styles, but they have lots in common
+ * spaces around operators
+ * always use `<-` for assignment (never `=`)
+ * use double hash (`##`) if comments starts in a new line 
+ * avoid semicolons
+ * use curly braces even when not necessary (e.g. in `if() … else …`)
+
+
+## Organize your work space
+
+ * readme.rmd or readme.txt files in every directory
+ * workspaces / projects and always know where you are
+ * standard project structure
+ * meaningful file names
+ * standard file extensions (`.R`, `.rda`, `.tsv`, `.csv`)
+
+## A matter of taste
+
+ * use `stop()`, `try()`, `warn()` and `message()`
+ * don't use `attach()` (use tidyverse instead!)
+ * row names, should one use them?
+ * use `rmarkdown` / `roxygen2` to document your functions on the go
+ * use spaces to indent your code (not tabs)
+ * keep track of the changes you make to your code and project
+
+## Documenting functions with roxygen
+
+```r
+#' Function for adding two numbers
+#' @param a first number
+#' @param b second number
+#' @return sum of the numbers
+add2nums <- function(a, b) {
+  a + b
+}
+```
+
+## More on that
+
+* always start with `#' `
+* `@param` – parameter
+* `@return` – return value
+* `@export`– the function should be accessible to users
+* `@seealso` – other related functions
+* `@examples` – section with examples
+ 
+## Exercise session #1
+
+
+
+# R as a functional language
+
+## Functional languages
+
+  * Clean: Haskell, Clean, PureScript
+  * Impure: C++, Java, Python, R
+  * functional programming paradigm:
+      * functions are called by arguments only and do not modify any
+        environmental variables
+      * vectorization
+      * higher order functions, closures and anonymous functions
+
+## Pure functions
+
+Pure functions do not modify their environment and their return value
+determistically depends on the arguments. This is often not
+possible (think: randomization, reading data).
+
+However, they have many advantages and it is worth pursuing them.
+
+## Everything is a function
+
+In R, almost everything is a function, including most operators:
+
+```r
+"+"(1, 2)
+
+a <- LETTERS[1:10]
+"["(a, 3) # prints out "C"
+```
+
+## Defining your own operators
+
+Use `%...%` to define your own operators:
+
+    %M% <- function(a, b) setdiff(a, b)
+
+    1:10 %M% 3:4 
+    # same as: setdiff(1:10, 3:4)
+
+    %P% <- function(a, b) paste0(a, b)
+
+You can also use special characters:
+
+    `%-%` <- function(a, b) setdiff(a, b)
+
+## Strict vs lazy evaluation
+
+Consider the following statements:
+
+    print(length(1/0))
+
+    f <- function(a=b) { b <- 17 ; print(a) }
+    f()
+
+
+  Which one will throw an error? Why?
+
+## Exercise Session 2
+
+## Vectorization
+
+Means operating on vectors and matrices rather than on single values.
+Instead of using a `for` loop to walk over all elements of a vector, one
+calls a function which operates on the vector as a whole. This is how
+standard R functions (such as `+`) work.
+
+Use `*apply` and, from tidyverse's `purrr` package, `*map*` instead of
+loops. Loops in R are almost never necessary.
+
+However, for complex tasks, don't be a purist. `for` is there for a reason.
+
+# Common pitfalls
+
+## Floating point
+
+Are all of the following statements true?
+
+    0.1 * 10 * 3 / 3 == 1
+    3 / 3 * 0.1 * 10  == 1
+    3 * 0.1 / 3 * 10  == 1
+
+Solution: use epsilon.
+
+    eps <- 1e-12
+    abs((3 * 0.1 / 3 * 10) - 1) < eps
+
+## Exercise Session 3
+
+
+
+## Factors, factors everywhere
+
+Factors are "tricky little devils". Be especially wary of factors that look
+like numbers. For example:
+
+    foo <- data.frame(ID=c(10:1, "a"))
+
+Factors are often silenty translated either to a numeric or character type.
+Strange things can happen then. Solution:
+
+    options(stringsAsFactors=FALSE)
+
+
+## data.frame with one column
+
+R's default data frames quietly turn to a vector when only one column is
+selected. This is usually not the desired outcome and can be avoided with
+
+    foo[, 1, drop=FALSE]
+
+## Partial matching behind `$`
+
+
+    a <- list()
+    a$coefficient <- 2
+    a$c # result: 2
+
+Solution:
+
+    options(warnPartialMatchDollar = TRUE)
+     
+## The Namibia problem
+
+By default, "NA" in data read means "not available", so if "NA" is a valid
+string (e.g. abbreviation of "Namibia"), trouble ensues.
+
+Solution:
+
+    na.strings=NULL
+
+## Precedence
+
+What does the following do?
+
+    n <- 10
+    for(i in 1:n-1) print(i)
+
+# A few more things
+
+## (R)markdown
+
+Markdown is a markup language: a way of indicating to the computers which
+parts of our text mean what, e.g. what is a header, what is a bullet list
+etc. Markdown is very, very simple and easy to read even when you are human
+(unlike XML or HTML).
+
+(Demo)
+
+## Markdown basics
+
+ * Headers: `#`, `##`, `###`…
+ * *italic* `*italic*` or `_italic_`
+ * **bold** `**bold**` or `__bold__`
+ * bullet lists: start with ` *`
+ * numbered lists: start with ` 2.`
+
+## So much more
+
+ * tables (you can produce them in R with `pander`)
+ * code: demarkated using backticks (`` ` ``)
+ * references: need a BibTeX file (you can get it from google scholar!)
+ * images: `![my_portrait](portrait.jpeg)`
+
+
+
+
+
+
