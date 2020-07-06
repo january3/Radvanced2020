@@ -31,18 +31,39 @@
 # Session 4: tidyverse
 
  1. Which package from tidyverse allows you to read Excel files? Read the
-    World Inequality Database file. 
+    World Inequality Database file (`WIID_19Dec2018.xlsx`). This is a
+    spreadsheet containing worlid income inequality data.
+
+ 2. Read the Excel sheet into R. How can you find out how many sheets are
+    in the file (without opening it in Excel, of course!).
+
+ 2. Examine the tibble produced by the `read_...` function. `q1..q5` are the
+    quantiles and `d1..d10` are the deciles. I.e., `q1` equal to 9 means
+    that the lower income 20% of the population owns 9% of the overall
+    wealth. The Gini coefficient ranges from 0 (perfect equality) to 100%
+    (perfect inequality).
+
+ 3. Which countries have the highest / lowest Gini coefficient? Which
+    countries had the highest / lowest Gini coefficient in 2016? Where is
+    Germany on that scale?
 
  2. With the world inequality data base, try the following:
 
-     * what columns are there? Which are "interesting"? (look up the PDF
-       document)
      * select only rows corresponding to the XXIst century
      * select only rows corresponding to the XXIst century *and* Europe
      * select only columns corresponding to quantiles and countries. Rename
        the quantiles to use uppercase
      * *reasonably* remove all incomplete rows (use `drop_na`)
      * summarize data by continent and by country
+
+ 2. Construct a tidyverse pipe with the following steps:
+
+     1. Select only entries from 2016
+     2. Remove duplicate entries for each country (you can use the
+        `duplicated` function for that)
+     3. Select the columns id, country and the quantile columns
+     4. Use the `gather` function to create a long version of the table 
+     5. Remove rows containing NA's using the `drop_na` function
 
   3. Load the world energy use data (`world_energy.tsv`). Change it from
      wide to long format.
