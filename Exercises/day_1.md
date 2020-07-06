@@ -32,7 +32,7 @@ add_two(5, 17)
 ## expected: 15 random numbers
 get_a_random(15, "uniform")
 
-## expected: 1e-3
+## expected: 1e-4
 min_pval(c(0.05, 0.0001, NA, 1e-3))
 ```
  
