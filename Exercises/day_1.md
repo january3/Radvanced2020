@@ -15,6 +15,26 @@
  * Document your function as best as you can. You can use
    [roxygen2](https://kbroman.org/pkg_primer/pages/docs.html) to make the
    documentation consistent.
+
+ * Write a function which
+
+    1. Adds two numbers, but checks that the arguments are numeric 
+    2. returns a random number. It takes two parameters: number of random
+       values to generate and the type of distribution (which should be:
+       normal, uniform, binomial: take a look at `rnorm`, `runif`, `rbinom`).
+    3. takes a vector of p-values and returns the smallest p-value (but
+       keep in mind that some values might be NA's!)
+
+```r
+## expected: 22
+add_two(5, 17)
+
+## expected: 15 random numbers
+get_a_random(15, "uniform")
+
+## expected: 1e-3
+min_pval(c(0.05, 0.0001, NA, 1e-3))
+```
  
 # Session 2: R as functional language
 
