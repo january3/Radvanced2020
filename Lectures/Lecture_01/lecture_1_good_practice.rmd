@@ -494,8 +494,25 @@ myfunction(1:100, 1, 12)
 myfunction(1:100, a=1, b=12, na.rm=TRUE)
 ```
 
+## Anonymous functions
 
+Pretty much like with regular variables, you don't have to create a
+variable to use the value:
 
+```r
+a <- 2
+a + 3
+2 + 3 ## both are equivalent
+```
+
+Similarly:
+
+```r
+add <- function(a, b) { a + b }
+add(1, 2)
+
+(function(a, b) { a + b })(1, 2)
+```
 
 # A few more things
 

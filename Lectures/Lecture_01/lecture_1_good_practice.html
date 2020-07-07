@@ -608,6 +608,21 @@ myfunction(1:100, 1, 12)</pre>
 <pre >##     a     b na.rm 
 ##     1    12     1</pre>
 
+</article></slide><slide class=""><hgroup><h2>Anonymous functions</h2></hgroup><article  id="anonymous-functions" class="smaller ">
+
+<p>Pretty much like with regular variables, you don&#39;t have to create a variable to use the value:</p>
+
+<pre class = 'prettyprint lang-r'>a &lt;- 2
+a + 3
+2 + 3 ## both are equivalent</pre>
+
+<p>Similarly:</p>
+
+<pre class = 'prettyprint lang-r'>add &lt;- function(a, b) { a + b }
+add(1, 2)
+
+(function(a, b) { a + b })(1, 2)</pre>
+
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>A few more things</h2></hgroup><article  id="a-few-more-things" class="smaller ">
 
 </article></slide><slide class=""><hgroup><h2>(R)markdown</h2></hgroup><article  id="rmarkdown" class="smaller ">
