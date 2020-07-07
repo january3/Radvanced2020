@@ -9,7 +9,7 @@
 
 
 
-  <meta name="date" content="2020-07-06" />
+  <meta name="date" content="2020-07-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -101,7 +101,7 @@ slide:not(.current) .plotly.html-widget{
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2020-07-06</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2020-07-07</p>
           </hgroup>
   </slide>
 
@@ -413,6 +413,200 @@ a$c # result: 2</pre>
 
 <pre >n &lt;- 10
 for(i in 1:n-1) print(i)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Typos</h2></hgroup><article  id="typos" class="smaller ">
+
+<p>What <em>exactly</em> will happen here?</p>
+
+<pre class = 'prettyprint lang-r'>a &lt;- FALSE
+
+if(a = TRUE) {
+  print(&quot;a is true!&quot;)
+}</pre>
+
+</article></slide><slide class=""><hgroup><h2>&amp; vs &amp;&amp;</h2></hgroup><article  id="vs" class="smaller ">
+
+<ul>
+<li><p><code>&amp;&amp;</code>: operator taking two values</p></li>
+<li><p><code>&amp;</code>: vectorized version</p></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>a &lt;- c(TRUE, TRUE)
+b &lt;- c(TRUE, FALSE)
+a &amp;&amp; b</pre>
+
+<pre >## [1] TRUE</pre>
+
+<pre class = 'prettyprint lang-r'>a &amp; b</pre>
+
+<pre >## [1]  TRUE FALSE</pre>
+
+</article></slide><slide class=""><hgroup><h2>&amp; vs &amp;&amp;</h2></hgroup><article  id="vs-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>if(a &amp;&amp; b) { print(&quot;TRUE!&quot;) }</pre>
+
+<pre >## [1] &quot;TRUE!&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>if(a &amp; b) { print(&quot;TRUE!&quot;) }</pre>
+
+<pre >## Warning in if (a &amp; b) {: the condition has length &gt; 1 and only the first element
+## will be used</pre>
+
+<pre >## [1] &quot;TRUE!&quot;</pre>
+
+</article></slide><slide class=""><hgroup><h2>Forgetting to use <code>any</code></h2></hgroup><article  id="forgetting-to-use-any" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>vec &lt;- c(1, 2, NA, 3, 4)
+
+if(is.na(vec)) { print(&quot;NA&#39;s found!&quot;) } else { print(&quot;No NA&#39;s!&quot;) }</pre>
+
+<pre >## Warning in if (is.na(vec)) {: the condition has length &gt; 1 and only the first
+## element will be used</pre>
+
+<pre >## [1] &quot;No NA&#39;s!&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>if(any(is.na(vec))) { print(&quot;NA&#39;s found!&quot;) } else { print(&quot;No NA&#39;s!&quot;) }</pre>
+
+<pre >## [1] &quot;NA&#39;s found!&quot;</pre>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Functions</h2></hgroup><article  id="functions" class="smaller ">
+
+</article></slide><slide class=""><hgroup><h2>What is a function?</h2></hgroup><article  id="what-is-a-function" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>myfunction &lt;- function(arg1, arg2) {
+  ret &lt;- sum(arg1, arg2)
+  return(ret)
+}
+
+myfunction(1, 2)</pre>
+
+<pre >## [1] 3</pre>
+
+<pre class = 'prettyprint lang-r'>a &lt;- 1
+b &lt;- 2
+myfunction(a, b)</pre>
+
+<pre >## [1] 3</pre>
+
+</article></slide><slide class=""><hgroup><h2>Confusion about arguments</h2></hgroup><article  id="confusion-about-arguments" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>input &lt;- &quot;myfile.txt&quot;
+
+myfunction &lt;- function(input) {
+  print(input)
+}
+
+myfunction(input)</pre>
+
+<pre >## [1] &quot;myfile.txt&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>myfunction(&quot;something else entirely&quot;)</pre>
+
+<pre >## [1] &quot;something else entirely&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>another_input &lt;- &quot;another one!&quot;
+myfunction(another_input)</pre>
+
+<pre >## [1] &quot;another one!&quot;</pre>
+
+</article></slide><slide class=""><hgroup><h2>Default arguments</h2></hgroup><article  id="default-arguments" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>myfunction &lt;- function(arg1=1, arg2=3) {
+  ret &lt;- sum(arg1, arg2)
+  return(ret)
+}
+
+myfunction(a, b)</pre>
+
+<pre >## [1] 3</pre>
+
+<pre class = 'prettyprint lang-r'>myfunction(a)</pre>
+
+<pre >## [1] 4</pre>
+
+<pre class = 'prettyprint lang-r'>myfunction()</pre>
+
+<pre >## [1] 4</pre>
+
+</article></slide><slide class=""><hgroup><h2>&quot;return&quot; is not necessary</h2></hgroup><article  id="return-is-not-necessary" class="smaller ">
+
+<p>Last statement of a function is its return value</p>
+
+<pre class = 'prettyprint lang-r'>myfunction &lt;- function(arg1, arg2) {
+  arg1 + arg2 # same as return(arg1 + arg2)
+}</pre>
+
+</article></slide><slide class=""><hgroup><h2>A slightly more complex example</h2></hgroup><article  id="a-slightly-more-complex-example" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>myfunction &lt;- function(x, operation=&quot;sum&quot;) {
+
+  if(operation == &quot;sum&quot;) {
+    ret &lt;- sum(x)
+  } else if(operation == &quot;mean&quot;) {
+    ret &lt;- mean(x)
+  }
+
+  return(ret)
+}</pre>
+
+</article></slide><slide class=""><hgroup><h2>Matching arguments</h2></hgroup><article  id="matching-arguments" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>myfunction &lt;- function(x, operation=&quot;sum&quot;) {
+
+  operation &lt;- match.arg(operation, c(&quot;sum&quot;, &quot;mean&quot;))
+
+  if(operation == &quot;sum&quot;) {
+    ret &lt;- sum(x)
+  } else if(operation == &quot;mean&quot;) {
+    ret &lt;- mean(x)
+  }
+
+  return(ret)
+}
+
+myfunction(1:100, &quot;s&quot;)</pre>
+
+<pre >## [1] 5050</pre>
+
+</article></slide><slide class=""><hgroup><h2>Ellipsis</h2></hgroup><article  id="ellipsis" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>myfunction &lt;- function(x, operation=&quot;sum&quot;, ...) {
+
+  operation &lt;- match.arg(operation, c(&quot;sum&quot;, &quot;mean&quot;))
+
+  if(operation == &quot;sum&quot;) {
+    ret &lt;- sum(x, ...)
+  } else if(operation == &quot;mean&quot;) {
+    ret &lt;- mean(x, ...)
+  }
+
+  return(ret)
+}
+input &lt;- c(1:100, NA)
+myfunction(input, &quot;s&quot;)</pre>
+
+<pre >## [1] NA</pre>
+
+<pre class = 'prettyprint lang-r'>myfunction(input, &quot;s&quot;, na.rm=TRUE)</pre>
+
+<pre >## [1] 5050</pre>
+
+</article></slide><slide class=""><hgroup><h2>Ellipsis</h2></hgroup><article  id="ellipsis-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>myfunction &lt;- function(x, ...) {
+  args &lt;- list(...)
+
+  print(unlist(args))
+}
+
+myfunction(1:100, 1, 12)</pre>
+
+<pre >## [1]  1 12</pre>
+
+<pre class = 'prettyprint lang-r'>myfunction(1:100, a=1, b=12, na.rm=TRUE)</pre>
+
+<pre >##     a     b na.rm 
+##     1    12     1</pre>
 
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>A few more things</h2></hgroup><article  id="a-few-more-things" class="smaller ">
 

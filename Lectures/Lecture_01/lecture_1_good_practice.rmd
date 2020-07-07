@@ -330,6 +330,173 @@ What does the following do?
     n <- 10
     for(i in 1:n-1) print(i)
 
+## Typos
+
+What *exactly* will happen here?
+
+```r
+a <- FALSE
+
+if(a = TRUE) {
+  print("a is true!")
+}
+```
+
+## & vs &&
+
+* `&&`: operator taking two values 
+
+* `&`: vectorized version
+
+```{r}
+a <- c(TRUE, TRUE)
+b <- c(TRUE, FALSE)
+a && b
+a & b
+```
+
+## & vs &&
+
+```{r}
+if(a && b) { print("TRUE!") }
+if(a & b) { print("TRUE!") }
+```
+
+## Forgetting to use `any`
+
+```{r}
+vec <- c(1, 2, NA, 3, 4)
+
+if(is.na(vec)) { print("NA's found!") } else { print("No NA's!") }
+
+if(any(is.na(vec))) { print("NA's found!") } else { print("No NA's!") }
+```
+
+
+# Functions
+
+## What is a function?
+
+```{r}
+myfunction <- function(arg1, arg2) {
+  ret <- sum(arg1, arg2)
+  return(ret)
+}
+
+myfunction(1, 2)
+a <- 1
+b <- 2
+myfunction(a, b)
+```
+
+## Confusion about arguments
+
+```{r}
+input <- "myfile.txt"
+
+myfunction <- function(input) {
+  print(input)
+}
+
+myfunction(input)
+myfunction("something else entirely")
+another_input <- "another one!"
+myfunction(another_input)
+```
+
+## Default arguments
+
+```{r}
+myfunction <- function(arg1=1, arg2=3) {
+  ret <- sum(arg1, arg2)
+  return(ret)
+}
+
+myfunction(a, b)
+myfunction(a)
+myfunction()
+```
+
+## "return" is not necessary
+
+Last statement of a function is its return value
+
+```{r}
+myfunction <- function(arg1, arg2) {
+  arg1 + arg2 # same as return(arg1 + arg2)
+}
+```
+
+## A slightly more complex example
+
+```{r}
+myfunction <- function(x, operation="sum") {
+
+  if(operation == "sum") {
+    ret <- sum(x)
+  } else if(operation == "mean") {
+    ret <- mean(x)
+  }
+
+  return(ret)
+}
+```
+
+## Matching arguments
+
+```{r}
+myfunction <- function(x, operation="sum") {
+
+  operation <- match.arg(operation, c("sum", "mean"))
+
+  if(operation == "sum") {
+    ret <- sum(x)
+  } else if(operation == "mean") {
+    ret <- mean(x)
+  }
+
+  return(ret)
+}
+
+myfunction(1:100, "s")
+```
+
+## Ellipsis
+
+```{r}
+myfunction <- function(x, operation="sum", ...) {
+
+  operation <- match.arg(operation, c("sum", "mean"))
+
+  if(operation == "sum") {
+    ret <- sum(x, ...)
+  } else if(operation == "mean") {
+    ret <- mean(x, ...)
+  }
+
+  return(ret)
+}
+input <- c(1:100, NA)
+myfunction(input, "s")
+myfunction(input, "s", na.rm=TRUE)
+```
+
+## Ellipsis
+
+```{r}
+myfunction <- function(x, ...) {
+  args <- list(...)
+
+  print(unlist(args))
+}
+
+myfunction(1:100, 1, 12)
+myfunction(1:100, a=1, b=12, na.rm=TRUE)
+```
+
+
+
+
 # A few more things
 
 ## (R)markdown
