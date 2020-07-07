@@ -383,7 +383,8 @@ map_chr(tmp, ~ paste(., collapse=", "))
 ## Why both worlds?
 
  * The \*pply functions are still widely used, so you will see them in code
- * sometimes using tidyverse does not really give you a bonus
+ * sometimes using tidyverse does not really give you a bonus (90% of the
+   cases a regular lapply will do)
 
 ## lapply & sapply
 
@@ -538,11 +539,13 @@ argument, and instead of writing `function(x) ...` you write `~ ...`:
 The same notation can be used also in dplyr with the `mutate_all` and
 `rename_all` functions:
 
-    ## Replace "none" by NA 
-    starwars %>% mutate_all(~ gsub("none", NA, .))
+```r
+## Replace "none" by NA 
+starwars %>% mutate_all(~ gsub("none", NA, .))
 
-    ## Modify all variable names
-    starwars %>% rename_all(~ paste0("Var_", .))
+## Modify all variable names
+starwars %>% rename_all(~ paste0("Var_", .))
+```
 
 ## `map_dfr` and `map_dfc`
 
@@ -550,12 +553,14 @@ These two create a data frame. If your function returns each time a data
 frame, map will join these – either by rows (`map_dfr`) or by
 columns (`map_dfc`).
 
-    ## create a list with 10 random vectors
-    rv <- map(1:10, ~ rnorm(10))
-    names(rv) <- LETTERS(1:10)
+```r
+## create a list with 10 random vectors
+rv <- map(1:10, ~ rnorm(10))
+names(rv) <- LETTERS(1:10)
 
-    ## calculate the mean and sd
-    map_dfc(rv, ~ data.frame(mean=mean(.), sd=sd(.)))
+## calculate the mean and sd
+map_dfc(rv, ~ data.frame(mean=mean(.), sd=sd(.)))
+```
 
 ## `map2` et co.
 
@@ -568,18 +573,29 @@ Instead of `.` you have two automatic variable names, `.x` and `.y`.
     map2_chr(sw_names, sw_vehcls, 
       ~ paste0(.x, "_", length(.y)))
 
+## `pmap` and co.
+
+`pmap` uses a list of vectors of identical length and passes all its
+columns as `...` to a function.
+
+```r
+data <- list(a=1:3, b=rnorm(3), c=3:1)
+pmap(data, ~ sum(...))
+```
+
 
 ## `pmap` and co.
 
-You can also use `pmap` to apply it to a list of vectors in which each
-vector has the same length. But remember: data.frame is also a list! So you
+Remember: data.frame is also a list! So you
 can apply pmap to a data frame and process each row.
 
-    starwars %>% 
-      select(name, hair_color, eye_color) %>% 
-      mutate_all(~ gsub("none", NA, .)) %>%
-      drop_na() %>%
-      pmap_chr(~ sprintf("%s has %s hair and %s eyes", ...))
+```r
+starwars %>% 
+  select(name, hair_color, eye_color) %>% 
+  mutate_all(~ gsub("none", NA, .)) %>%
+  drop_na() %>%
+  pmap_chr(~ sprintf("%s has %s hair and %s eyes", ...))
+```
 
 
 
