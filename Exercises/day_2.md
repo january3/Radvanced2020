@@ -8,7 +8,7 @@
     be interpreted as dates and not numbers?
  
  2. Read the World Inequality Database file
-    ([WIID_19Dec2018.xlsx](../../Data/WIID_19Dec2018.xlsx)). This is a
+    ([WIID_19Dec2018.xlsx](../Data/WIID_19Dec2018.xlsx)). This is a
     spreadsheet containing worlid income inequality data.
 
  2. Read the Excel sheet into R. How can you find out how many sheets are
@@ -41,8 +41,8 @@
 
  2. Using tidyverse, read, inspect and correct (if reasonable) the following files:
 
-    * [cars.xlsx](../../Data/cars.xlsx)
-    * [iris.csv](../../Data/iris.csv)
+    * [cars.xlsx](../Data/cars.xlsx)
+    * [iris.csv](../Data/iris.csv)
 
  2. Construct a tidyverse pipe with the following steps:
 
