@@ -184,7 +184,7 @@ df <- data.frame(1:1000)
 df %>% head
 ```
 
-## Ceci n'est pas une pipe
+## Pipes in full: magrittr package
 
 ![](../files/MagrittePipe.jpg){width=600px}
 
@@ -372,18 +372,16 @@ map_chr(tmp, ~ paste(., collapse=", "))
 
 ## lapply & sapply
 
-`lapply` takes a list and returns a list without names.
+`lapply` takes a list and returns a list, always.
 
 `sapply` takes a list and tries to simplify it to a relevant object (data
-frame, vector etc.) Notably, it uses names of the list, and you can force
-it to always return a list.
+frame, vector etc.). Which sometimes fails.
 
 Compare:
 
 ```{r,eval=FALSE}
 lapply(starwars$name, nchar)
 sapply(starwars$name, nchar)
-sapply(starwars$name, nchar, simplify=FALSE)
 ```
 
 
@@ -395,19 +393,25 @@ This is a special form of `sapply` which simply calls a function `n` times
 and returns the results in a list. Note that it uses an expression and not
 a function as a second argument.
 
-    ## create 10 vectors with random numbers
-    replicate(10, rnorm(10), simplify=FALSE)
+```r
+## create 10 vectors with random numbers
+replicate(10, rnorm(10), simplify=FALSE)
+```
 
 ## General form
 
-    xxxapply(data, ..., function)
+```r
+xxxapply(data, ..., function)
+```
 
 Where `function` can be a closure (anonymous function), defined in place:
 
-    ## replace spaces by underscores
-    sapply(starwars$name, 
-      function(x) 
-          gsub(" ", "_", starwars$name))
+```r
+## replace spaces by underscores
+sapply(starwars$name, 
+  function(x) 
+      gsub(" ", "_", starwars$name))
+```
 
 ## apply
 
@@ -416,11 +420,13 @@ The second argument determines whether it works row-wise (1) or column-wise
 (2):
 
 
-    ## matrix of random numbers, 3 x 20
-    mtx <- matrix(rnorm(60), ncol=3)
+```r
+## matrix of random numbers, 3 x 20
+mtx <- matrix(rnorm(60), ncol=3)
 
-    apply(mtx, 1, sum)
-    apply(mtx, 2, sum)
+apply(mtx, 1, sum)
+apply(mtx, 2, sum)
+```
 
 ## There is a simpler way
 
@@ -446,23 +452,44 @@ This is a really important function.
 `group_by` introduces a grouping in a data frame that can be then used by
 `summarise` to calculate something reasonable. This is a lot like `tapply`.
 
-    mtcars %>% group_by(cyl) %>%
-      summarise(m.hp=mean(hp))
+```r
+mtcars %>% group_by(cyl) %>%
+  summarise(m.hp=mean(hp))
+```
 
 ## `group_by`
 
 This has the advantage that you can define a whole range of calculations
 based on any column in the data:
 
-    mtcars %>% group_by(cyl) %>%
-      summarise(m.hp=mean(hp), m.wt=mean(wt))
+```r
+mtcars %>% group_by(cyl) %>%
+  summarise(m.hp=mean(hp), m.wt=mean(wt))
+```
 
 Or you can use a more complex function:
 
-    ## which planet has the largest mean BMI?
-    starwars %>% group_by(homeworld) %>%
-      summarise(bmi = mean(mass/(height/100)^2))
+```r
+## which planet has the largest mean BMI?
+starwars %>% group_by(homeworld) %>%
+  summarise(bmi = mean(mass/(height/100)^2))
+```
 
+## Weird, weird world (heavy stuff)
+
+What if we don't want to choose a variable by hand?
+
+```r
+mtcars %>% group_by(cyl) %>% summarise_all(mean)
+```
+
+Or, if we want something more complex, we use the `~ ...` form:
+
+```r
+mtcars %>% group_by(cyl) %>% summarise_all(~ mean(.)/sd(.))
+```
+
+The dot (`.`) stands for the argument. 
 
 # `purrr`
 
