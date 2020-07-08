@@ -9,7 +9,7 @@ output:
     css: "../files/style.css"
 ---
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,results="hide",message=FALSE,warning=FALSE}
 ## Set default options for the knitr RMD processing
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=FALSE,autodep=TRUE, results="hide")
 library(tidyverse)

@@ -10,13 +10,16 @@ output:
 ---
 
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,results="hide"}
 ## Set default options for the knitr RMD processing
-knitr::opts_chunk$set(echo=TRUE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=TRUE,autodep=TRUE, results="hide")
+knitr::opts_chunk$set(echo=TRUE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=FALSE,autodep=TRUE, results="hide")
+```
+
+```{r, echo=FALSE}
 library(tidyverse)
 library(ggthemes)
-library(cowplot)
-theme_set(theme_grey())
+#library(cowplot)
+#theme_set(theme_grey())
 ```
 
 
@@ -40,7 +43,7 @@ space.”*
 
 ## Edwart Tufte – Books
 
-![](../files/tufte-books.jpg){width=700px}
+![](../files/tufte-books.png){width=700px}
 
 ## Less is more
 
@@ -49,17 +52,25 @@ Data visualization is all about communication.
 Just like in graphics design, less is more. To get a good graphics remove
 all excess ink.
 
+## Checklist for making graphs
+
+ * What do I want to say?
+ * What do I *need* to say? 
+ * What part of my information is redundant?
+ * What is the standard way of displaying the information in my field?
+
+Resist the temptation of showing every bit of data. If necessary, put it in
+the supplementary materials.
+
 ## Average MPG depending on number of cylinders
 
-    p <- mtcars %>% group_by(cyl) %>% 
-      summarise(mean_mpg=mean(mpg)) %>%
-      mutate(cyl=factor(cyl)) %>% 
-      ggplot(aes(x=cyl, y=mean_mpg, fill=cyl))
+```{r barplot_01,eval=FALSE}
+```
 
 ## All bells and whistles
 
 
-```{r barplot_01,fig.width=6,fig.height=5}
+```{r barplot_01,fig.width=6,fig.height=5,echo=FALSE}
 p <- mtcars %>% group_by(cyl) %>% 
       summarise(mean_mpg=mean(mpg)) %>%
       mutate(cyl=factor(cyl)) %>% 
@@ -77,7 +88,7 @@ information.”* (Tufte)
 ## Remove legend
 
 
-```{r barplot_02,fig.width=6,fig.height=5}
+```{r barplot_02,fig.width=6,fig.height=5,echo=FALSE}
 p + geom_bar(stat="identity", mapping=aes(fill=cyl)) + 
   theme(legend.position="none", 
     axis.line=element_line(size=1, arrow=arrow(length=unit(0.1, "inches"))))
@@ -87,7 +98,7 @@ p + geom_bar(stat="identity", mapping=aes(fill=cyl)) +
 
 ## Remove axes
 
-```{r barplot_03,fig.width=6,fig.height=5}
+```{r barplot_03,fig.width=6,fig.height=5,echo=FALSE}
 p + geom_bar(stat="identity", mapping=aes(fill=cyl)) + 
   theme(legend.position="none")
 ```
@@ -95,7 +106,7 @@ p + geom_bar(stat="identity", mapping=aes(fill=cyl)) +
 
 ## Remove color
 
-```{r barplot_04,fig.width=6,fig.height=5}
+```{r barplot_04,fig.width=6,fig.height=5,echo=FALSE}
 p + geom_bar(stat="identity", fill="#666666") + 
   theme(legend.position="none")
 ```
@@ -103,7 +114,7 @@ p + geom_bar(stat="identity", fill="#666666") +
 
 ## Narrow bars
 
-```{r barplot_05,fig.width=6,fig.height=5}
+```{r barplot_05,fig.width=6,fig.height=5,echo=FALSE}
 p + geom_bar(stat="identity", fill="#666666", width=0.5) + 
   theme(legend.position="none")
 ```
@@ -111,7 +122,7 @@ p + geom_bar(stat="identity", fill="#666666", width=0.5) +
 
 ## Remove vertical grid
 
-```{r barplot_06,fig.width=6,fig.height=5}
+```{r barplot_06,fig.width=6,fig.height=5,echo=FALSE}
 p + geom_bar(stat="identity", fill="#666666", width=0.5) + 
   theme(legend.position="none", panel.grid.major.x=element_blank())
 ```
@@ -119,7 +130,7 @@ p + geom_bar(stat="identity", fill="#666666", width=0.5) +
 
 ## Remove grey background
 
-```{r barplot_07,fig.width=6,fig.height=5}
+```{r barplot_07,fig.width=6,fig.height=5,echo=FALSE}
 p + geom_bar(stat="identity", fill="#666666", width=0.5) + 
   theme(legend.position="none", panel.grid.major.x=element_blank(), 
     panel.ontop=T, panel.background=element_rect(fill="#FFFFFF00"), 
@@ -129,7 +140,7 @@ p + geom_bar(stat="identity", fill="#666666", width=0.5) +
 
 ## Add meaningful labels
 
-```{r barplot_08,fig.width=6,fig.height=5}
+```{r barplot_08,fig.width=6,fig.height=5,echo=FALSE}
 p + geom_bar(stat="identity", fill="#666666", width=0.5) + 
   theme(legend.position="none", panel.grid.major.x=element_blank(), 
     panel.ontop=T, panel.background=element_rect(fill="#FFFFFF00"), 
@@ -138,21 +149,11 @@ p + geom_bar(stat="identity", fill="#666666", width=0.5) +
     ylab("Mean MPG") + xlab("Number of cylinders")
 ```
 
+```{r echo=FALSE}
+library(cowplot)
+theme_set(theme_grey())
+```
 
-##
-
-    p + geom_bar(stat="identity", fill="#666666", width=0.5) +
-      theme(legend.position="none", 
-        panel.grid.major.x=element_blank(),
-        panel.ontop=T, 
-        panel.background=
-            element_rect(fill="#FFFFFF00"),
-        panel.grid.major.y=
-            element_line(size=1, color="white"),
-        panel.grid.minor.y=
-            element_line(size=1, color="white")) + 
-        ylab("Mean MPG") + 
-        xlab("Number of cylinders")
 
 ## Box plots: default R
 
@@ -198,6 +199,120 @@ plot_grid(plotlist=p, labels=c("Default", "Par", "Cowplot", "Tufte"))
     
 
 *“Above all else show the data.”* (Tufte)
+
+
+# Common problems and solutions
+
+## Avoid bar charts
+
+ * Bar charts have their purpose: showing proportions or absolute
+   quantities (1 value per bar)
+ * Y axis must always start at 0, because bar charts communicate with the
+   bar surface area
+ * Bar charts are often misused to show sample means and sample spread;
+   they should be replaced by box plots, violin plots or dot plots.
+   
+(demo)
+
+*Editorial. "Kick the bar chart habit." Nature Methods 11 (2014): 113.*
+
+
+
+## Avoid pie charts
+
+ * Pie charts are bad at communicating information, just don't use them
+ * Don't even mention 3D pie charts
+ * There are tons of alternatives to pie charts
+
+## Avoid pie charts
+
+```{r,echo=FALSE}
+wigplot <- function(i) {
+  require(plotwidgets)
+  par(mar=rep(0, 4))
+  par(mfrow=c(2, 4))
+  par(usr=c(0,1,0,1))
+
+  v <- c(.3, .8, .7, .4, .5)
+  col <- plotPals("zeileis")
+
+  plot.new()
+  wgPie(.5, .5, .8, .8, v, col=col)
+
+  if(i > 0) {
+    plot.new()
+    wgRing(.5, .5, .8, .8, v, col=col)
+  }
+  if(i > 1) {
+    plot.new()
+    wgBurst(.5, .5, .8, .8, v, col=col)
+  }
+  if(i > 2) {
+    plot.new()
+    wgBoxpie(.5, .5, .8, .8, v, col=col)
+  }
+  if(i > 3) {
+    plot.new()
+    wgPlanets(.5, .5, .8, .8, v, col=col)
+  }
+  if(i > 4) {
+    plot.new()
+    wgRug(.5, .5, .8, .8, v, col=col)
+  }
+  if(i > 5) {
+    plot.new()
+    wgBarplot(.5, .5, .8, .8, v, col=col)
+  }
+}
+```
+
+```{r echo=FALSE,fig.width=7,fig.height=4}
+wigplot(0)
+```
+
+## Avoid pie charts
+
+```{r echo=FALSE,fig.width=7,fig.height=4}
+wigplot(1)
+```
+
+## Avoid pie charts
+
+```{r echo=FALSE,fig.width=7,fig.height=4}
+wigplot(2)
+```
+
+
+
+## Avoid pie charts
+
+```{r echo=FALSE,fig.width=7,fig.height=4}
+wigplot(3)
+```
+
+## Avoid pie charts
+
+```{r echo=FALSE,fig.width=7,fig.height=4}
+wigplot(4)
+```
+
+## Avoid pie charts
+
+```{r echo=FALSE,fig.width=7,fig.height=4}
+wigplot(5)
+```
+
+## Avoid pie charts
+
+```{r echo=FALSE,fig.width=7,fig.height=4}
+wigplot(6)
+```
+
+
+
+
+
+
 
 # Eine kleine Farbenlehre
 

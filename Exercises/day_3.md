@@ -3,7 +3,7 @@
  1. Use `lapply` to find out what is the type of each column in `starwars`
     (use the function `class` for that).
 
- 2. Create a list where elements are vectors with 2, ... 100 random
+ 2. Create a list where elements are vectors with 2, 3, 4, ..., 100 random
     normally distributed numbers.  Then, for each element of the list,
     calculate the mean, median, interquartile range and standard deviation.
     What do you observe? (interquartile range: function IQR).
