@@ -242,7 +242,58 @@ Get a single column as a vector
 
 Sort the rows of the data 
 
-    mtcars %>% arrange(mpg)
+```r
+mtcars %>% arrange(mpg)
+```
+
+# Mapping in dplyr
+
+## `group_by`
+
+`group_by` introduces a grouping in a data frame that can be then used by
+`summarise` to calculate something reasonable. This is a lot like `tapply`.
+
+```r
+mtcars %>% group_by(cyl) %>%
+  summarise(m.hp=mean(hp))
+```
+
+## `group_by`
+
+This has the advantage that you can define a whole range of calculations
+based on any column in the data:
+
+```r
+mtcars %>% group_by(cyl) %>%
+  summarise(m.hp=mean(hp), m.wt=mean(wt))
+```
+
+Or you can use a more complex function:
+
+```r
+## which planet has the largest mean BMI?
+starwars %>% group_by(homeworld) %>%
+  summarise(bmi = mean(mass/(height/100)^2))
+```
+
+## Weird, weird world (heavy stuff)
+
+What if we don't want to choose a variable by hand?
+
+```r
+mtcars %>% group_by(cyl) %>% summarise_all(mean)
+```
+
+Or, if we want something more complex, we use the `~ ...` form:
+
+```r
+mtcars %>% group_by(cyl) %>% summarise_all(~ mean(.)/sd(.))
+```
+
+The dot (`.`) stands for the argument. 
+
+
+
 
 ## Exercise Session 2/2
 
@@ -358,245 +409,5 @@ df %<>% select(!!cols)
 
 
 ## Exercise Session 2/3
-
-# Mapping
-
-## Mapping in R / in R + tidyverse
-
-```{r}
-tmp <- list(a=1, b=2, c=1:10)
-
-lapply(tmp, length)
-lapply(tmp, function(x) paste(x, collapse=", "))
-```
-
-## Mapping in R / in R + tidyverse
-
-```{r}
-map(tmp, ~ paste(., collapse=", "))
-
-## type conversion is always specified
-map_chr(tmp, ~ paste(., collapse=", "))
-```
-
-
-## Why both worlds?
-
- * The \*pply functions are still widely used, so you will see them in code
- * sometimes using tidyverse does not really give you a bonus (90% of the
-   cases a regular lapply will do)
-
-## lapply & sapply
-
-`lapply` takes a list and returns a list, always.
-
-`sapply` takes a list and tries to simplify it to a relevant object (data
-frame, vector etc.). Which sometimes fails.
-
-Compare:
-
-```{r,eval=FALSE}
-lapply(starwars$name, nchar)
-sapply(starwars$name, nchar)
-```
-
-
-(Demo)
-
-## `replicate`
-
-This is a special form of `sapply` which simply calls a function `n` times
-and returns the results in a list. Note that it uses an expression and not
-a function as a second argument.
-
-```r
-## create 10 vectors with random numbers
-replicate(10, rnorm(10), simplify=FALSE)
-```
-
-## General form
-
-```r
-xxxapply(data, ..., function)
-```
-
-Where `function` can be a closure (anonymous function), defined in place:
-
-```r
-## replace spaces by underscores
-sapply(starwars$name, 
-  function(x) 
-      gsub(" ", "_", starwars$name))
-```
-
-## apply
-
-`apply` is for data frames and matrices (two-dimensional objects).
-The second argument determines whether it works row-wise (1) or column-wise
-(2):
-
-
-```r
-## matrix of random numbers, 3 x 20
-mtx <- matrix(rnorm(60), ncol=3)
-
-apply(mtx, 1, sum)
-apply(mtx, 2, sum)
-```
-
-## There is a simpler way
-
-Don't forget following convenience functions:
-
- * `colSums`, `colMeans`
- * `rowSums`, `rowMeans`
-
-## tapply
-
-`tapply`  applies a function to vector split by levels of a factor. For
-example, we might want to know what is the mean mpg for cars with different
-number of cylinders:
-
-    tapply(mtcars$mpg, mtcars$cyl, mean)
-
-This is a really important function.
-
-# Mapping in dplyr
-
-## `group_by`
-
-`group_by` introduces a grouping in a data frame that can be then used by
-`summarise` to calculate something reasonable. This is a lot like `tapply`.
-
-```r
-mtcars %>% group_by(cyl) %>%
-  summarise(m.hp=mean(hp))
-```
-
-## `group_by`
-
-This has the advantage that you can define a whole range of calculations
-based on any column in the data:
-
-```r
-mtcars %>% group_by(cyl) %>%
-  summarise(m.hp=mean(hp), m.wt=mean(wt))
-```
-
-Or you can use a more complex function:
-
-```r
-## which planet has the largest mean BMI?
-starwars %>% group_by(homeworld) %>%
-  summarise(bmi = mean(mass/(height/100)^2))
-```
-
-## Weird, weird world (heavy stuff)
-
-What if we don't want to choose a variable by hand?
-
-```r
-mtcars %>% group_by(cyl) %>% summarise_all(mean)
-```
-
-Or, if we want something more complex, we use the `~ ...` form:
-
-```r
-mtcars %>% group_by(cyl) %>% summarise_all(~ mean(.)/sd(.))
-```
-
-The dot (`.`) stands for the argument. 
-
-# `purrr`
-
-## `map` and co.
-
-`map` works very much like `sapply(..., simplify=F)`, and its variants
-explicitely try to cast the result in an appriopriate format.
-
- * `map_lgl` -- logical vector
- * `map_chr` -- character vector
- * `map_int` -- integer vector
- * `map_dbl` -- double (floating point) vector
-
-## The weird syntax of `map`
-
-To make the map functions more terse, map family adopted a particular way
-of formulating custom functions. `.` (dot) is automatically used as
-argument, and instead of writing `function(x) ...` you write `~ ...`:
-
- * sapply:
-
-        ## return 1, 2, ... 10 random numbers
-        sapply(1:10, function(x) rnorm(x))
-
- * map:
-
-        map(1:10, ~ rnorm(.))
-
-## Formula notation in dplyr
-
-The same notation can be used also in dplyr with the `mutate_all` and
-`rename_all` functions:
-
-```r
-## Replace "none" by NA 
-starwars %>% mutate_all(~ gsub("none", NA, .))
-
-## Modify all variable names
-starwars %>% rename_all(~ paste0("Var_", .))
-```
-
-## `map_dfr` and `map_dfc`
-
-These two create a data frame. If your function returns each time a data
-frame, map will join these – either by rows (`map_dfr`) or by
-columns (`map_dfc`).
-
-```r
-## create a list with 10 random vectors
-rv <- map(1:10, ~ rnorm(10))
-names(rv) <- LETTERS(1:10)
-
-## calculate the mean and sd
-map_dfc(rv, ~ data.frame(mean=mean(.), sd=sd(.)))
-```
-
-## `map2` et co.
-
-Sometimes you want to go over two or more vectors at the same time. 
-Instead of `.` you have two automatic variable names, `.x` and `.y`.
-
-    ## add number of vehicles to each name
-    sw_names <- starwars$name
-    sw_vehcls <- starwars$vehicles
-    map2_chr(sw_names, sw_vehcls, 
-      ~ paste0(.x, "_", length(.y)))
-
-## `pmap` and co.
-
-`pmap` uses a list of vectors of identical length and passes all its
-columns as `...` to a function.
-
-```r
-data <- list(a=1:3, b=rnorm(3), c=3:1)
-pmap(data, ~ sum(...))
-```
-
-
-## `pmap` and co.
-
-Remember: data.frame is also a list! So you
-can apply pmap to a data frame and process each row.
-
-```r
-starwars %>% 
-  select(name, hair_color, eye_color) %>% 
-  mutate_all(~ gsub("none", NA, .)) %>%
-  drop_na() %>%
-  pmap_chr(~ sprintf("%s has %s hair and %s eyes", ...))
-```
-
-
 
 
