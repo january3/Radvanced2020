@@ -28,7 +28,7 @@ library(ggthemes)
 
 ## Minard
 
-![](../files/Minard.png){width=800}
+![](../files/Minard.png){width=1000}
 
 ## Edward Tufte
 
@@ -163,7 +163,12 @@ boxplot(hwy ~ class, data=mpg)
 
 ## Box plots: Tufte
 
-```{r boxplot_02,fig.width=8,fig.height=5}
+```{r boxplot_02,fig.width=8,fig.height=5,eval=FALSE}
+```
+
+## Box plots: Tufte
+
+```{r boxplot_02,fig.width=8,fig.height=5,echo=FALSE}
 toupper1st <- function(x) 
   paste0(toupper(substring(x, 1, 1)), substring(x, 2))
 mpg %>% mutate(class=toupper1st(class)) %>% 
@@ -175,7 +180,7 @@ mpg %>% mutate(class=toupper1st(class)) %>%
 
 ## Scatter plot variants
 
-```{r scatter_themes,fig.width=8,fig.height=5}
+```{r scatter_themes,fig.width=8,fig.height=5,echo=FALSE}
 p <- list()
 p$p1 <- ggplot(mtcars, aes(x=disp, y=hp, color=factor(cyl))) + geom_point() 
 p$p2 <- ggplot(mtcars, aes(x=disp, y=hp, color=factor(cyl))) + geom_point() + 
@@ -187,7 +192,11 @@ p$p4 <- ggplot(mtcars, aes(x=disp, y=hp, color=factor(cyl))) + geom_point() +
 
 p <- map(p, ~ . + theme(plot.margin=margin(20, 0, 0, 0)))
 plot_grid(plotlist=p, labels=c("Default", "Par", "Cowplot", "Tufte"))
+```
 
+## Scatter plot variants
+
+```{r scatter_themes,fig.width=8,fig.height=5,eval=FALSE}
 ```
 
 ##
@@ -355,7 +364,7 @@ notation, used also in HTML:
 Useful way to handle large numbers of data points. `#FF000000`: fully
 transparent; `#FF0000FF`: fully opaque.
 
-```{r scatter,fig.width=8,fig.height=4}
+```{r scatter,fig.width=8,fig.height=4,eval=FALSE}
 x <- rnorm(10000)
 y <- x + rnorm(10000)
 p1 <- ggplot(NULL, aes(x=x, y=y)) + geom_point() + 
@@ -365,6 +374,13 @@ p2 <- ggplot(NULL, aes(x=x, y=y)) + geom_point(color="#6666661F") +
 plot_grid(p1, p2, labels=c("Black", "#6666661F"))
 ```
 
+## Alpha channel: transparency
+
+Useful way to handle large numbers of data points. `#FF000000`: fully
+transparent; `#FF0000FF`: fully opaque.
+
+```{r scatter,fig.width=8,fig.height=4,echo=FALSE}
+```
 
 ## Other color systems
 
@@ -372,14 +388,14 @@ There are several other representations of color space, and they do not give
 exactly the same results. Two common representations are HSV and HSL: Hue,
 Saturation and Value, and Hue, Saturation and Luminosity. 
 
-![](figures/hsvhsl.png){width=700}
+![](../files/hsvhsl.png){width=800}
 
 ## Manipulating colors
 
 There are many packages to help you manipulate the colors using hsl and hsv.
 For example, my package `plotwidgets` allows you to change it using the HSL model.
 
-```{r plotwidgets,fig.width=5,fig.height=5}
+```{r plotwidgets,fig.width=5,fig.height=5,eval=FALSE}
 library(plotwidgets)
 ## Now loop over hues
 pal <- plotPals("zeileis")
@@ -403,6 +419,14 @@ pos <- a2xy(hues[-1], r=0.4)
 text(pos$x, pos$y, hues[-1])
 ```
 
+## Manipulating colors
+
+There are many packages to help you manipulate the colors using hsl and hsv.
+For example, my package `plotwidgets` allows you to change it using the HSL model.
+
+```{r plotwidgets,fig.width=5,fig.height=5,echo=FALSE}
+```
+
 ## Palettes
 
 It is not easy to get a nice combination of colors (see default plot in ggplot2
@@ -413,10 +437,15 @@ There are numerous palettes in numerous packages.  One of the most popular is
 
 ## RColorBrewer palettes
 
-```{r rcolorbrewer,fig.width=8,fig.height=5}
+```{r rcolorbrewer,fig.width=8,fig.height=5,eval=FALSE}
 library(RColorBrewer)
 par(mar=c(0,4,0,0))
 display.brewer.all()
+```
+
+## RColorBrewer palettes
+
+```{r rcolorbrewer,fig.width=8,fig.height=5,echo=FALSE}
 ```
 
 ## RColorBrewer palettes: color blind
