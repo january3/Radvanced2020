@@ -1,3 +1,5 @@
+To download the files, right-click on the link below and save the file:
+
  * [cars.xlsx](https://raw.githubusercontent.com/january3/Radvanced2020/master/Data/cars.xlsx)
  * [iris.csv](https://raw.githubusercontent.com/january3/Radvanced2020/master/Data/iris.csv)
  * [iris.tsv](https://raw.githubusercontent.com/january3/Radvanced2020/master/Data/iris.tsv)
