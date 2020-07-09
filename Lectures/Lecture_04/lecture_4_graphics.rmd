@@ -918,9 +918,11 @@ methods(print) %>% { .[grep("ggplot", .)] }
 
 ## Resources
 
- * The "R Graphics Cookbook"
- * The STHDA (sthda.com) website
- * Stackoverflow
+ * The "[R Graphics Cookbook](https://r-graphics.org/)"
+ * The [STHDA (sthda.com)](https://sthda.com) website
+ * [Stackoverflow](https://stackoverflow.com)
+ * [R-graph-gallery](https://www.r-graph-gallery.com/)
+ * [Data-to-viz](https://www.data-to-viz.com/)
 
 ## qplot: gentle introduction to ggplot
 
