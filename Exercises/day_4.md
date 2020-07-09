@@ -33,7 +33,7 @@
  1. Repeat first two exercises from 4/1 using different color schemes.
  2. Use a gradient color scale to represent fold changes on the
     transcriptomic data plot.
- 3. A "disco score" has been defined (Domaszewska et al.) to combine
+ 3. A "disco score" has been defined ([Domaszewska et al.](https://www.nature.com/articles/s41598-017-11812-x)) to combine
     information from two log fold changes and two p-values:
 
     <img
