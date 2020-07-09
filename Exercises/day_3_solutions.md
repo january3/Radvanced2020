@@ -102,6 +102,7 @@ hours <- c(0, 1, 12, 24, 24 * 7)
 ## characters wide"
 colnames(samps) <- c("PersonID", "Sex", "Age", "Cells", sprintf("TP.%03d", hours))
 samps <- samps %>% 
+  mutate(Cells=gsub("monocytes", "Monocytes", Cells)) %>%
   mutate(PersonID=gsub(",,", NA, PersonID)) %>%
   mutate(PersonID=gsub("[^[:alnum:]]+", "", PersonID)) %>%
   mutate(PersonID=gsub("SPC", "SPC_", PersonID)) %>%
