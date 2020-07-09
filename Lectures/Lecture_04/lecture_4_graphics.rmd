@@ -751,8 +751,9 @@ ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) +
  * my package `plotwidgets` implements a couple of other palettes
  * You can always define your own colors!
  * Use a color picker to "steal" palettes that you think are nice
- * You can use [this tool](https://davidmathlogic.com/colorblind/) to
-   design colorblind friendly palettes
+ * You can use [this tool](https://davidmathlogic.com/colorblind/) 
+   or [this one](https://projects.susielu.com/viz-palette)
+   to design colorblind friendly palettes
 
 ## Using manual (or plotwidgets) palettes in ggplot2
 
