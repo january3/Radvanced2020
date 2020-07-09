@@ -37,7 +37,7 @@
     information from two log fold changes and two p-values:
 
     <img
-    src="https://render.githubusercontent.com/render/math?math=D_{\textrm{score}}=LFC_1\cdot LFC_2\cdot(|\log_10(q_1)| + |\log_10(q_2)|)">
+    src="https://render.githubusercontent.com/render/math?math=D_{\textrm{score}}=LFC_1\cdot LFC_2\cdot(-\log_10(q_1) - \log_10(q_2))">
 
     Calculate the disco score for Day 1 / Day 2 in the transcriptomic
     results table.
