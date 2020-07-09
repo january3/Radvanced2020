@@ -12,12 +12,13 @@ output:
 
 ```{r,echo=FALSE,results="hide"}
 ## Set default options for the knitr RMD processing
-knitr::opts_chunk$set(echo=TRUE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=FALSE,autodep=TRUE, results="hide")
+knitr::opts_chunk$set(echo=TRUE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=TRUE,autodep=TRUE, results="hide")
 ```
 
 ```{r, echo=FALSE}
 library(tidyverse)
 library(ggthemes)
+library(readxl)
 #library(cowplot)
 #theme_set(theme_grey())
 ```
@@ -291,8 +292,6 @@ wigplot(1)
 wigplot(2)
 ```
 
-
-
 ## Avoid pie charts
 
 ```{r echo=FALSE,fig.width=7,fig.height=4}
@@ -321,6 +320,181 @@ wigplot(6)
 
 
 
+# Graphics systems in R
+
+## Important message
+
+It is not important which system you use. It is important that you first
+come up with the idea how you want the data to be plotted, and that you can
+plot it – with whatever means you can. (Where should you look for a lost
+watch?)
+
+## Graphics systems in R
+
+ * graphic devices (PDF, SVG, PNG, ...)
+ * basic R: plotting primitives, `par()` system
+ * rgl (3D graphics): 3D plotting primitives
+ * plotrix: a collection of plotting functions
+ * grid: an alternative system of plotting primitives
+ * lattice: based on grid, sophisticated plotting
+ * ggplot2: based on grid, sophisticated plotting
+
+## Graphics systems in R
+
+
+![](../files/grid-pkgs.svg)
+
+## Graphics in basic R: Pros
+
+
+  * easy learning curve
+  * superb for quick and dirty plots
+  * relatively easy to add arbitrary elements to the plots
+  * widely spread, always there for you
+  * many specialized packages doing what otherwise cannot be easily
+    achieved
+
+## Graphics in basic R: Cons
+  
+  * messy
+  * not standardized
+  * once you put something on the plot, it stays here
+  * some things are incredibly hard to achieve
+  * by default ugly as sin
+
+
+## Graphics in ggplot2: Pros
+
+  * well thought through and organized
+  * easy to modify a ready made plot
+  * dozens of different plot types with a similar interface
+  * tons of ggplot2 based packages
+  * widely spread
+
+## Graphics in ggplot2: Cons
+
+  * steeper learning curve, completely different philosophy
+  * I for one have always to look up even simplest things
+  * some things are incredibly hard to achieve
+  * if it's not there, you are on your own
+  * huge data sets problematic (require huge data frames -> use tibble)
+  * by default ugly as sin
+
+
+## Things that basic R sucks at
+
+ * changing the overall esthetics of the plot easily
+ * modifying certain parameters (like text)
+ * making facets
+
+## Things that ggplot2 sucks at
+
+ * networks (use igraph or graphviz for that)
+ * identifying points on a plot, interactive graphics
+ * 3D graphics
+ * slooooooow
+
+
+## ggplot2 overview
+
+ * mapping between variables and an "esthetics"
+     * x, y
+     * color, fill
+     * symbol
+     * ymin/ymax, xmin/xmax (error bars)
+ * geom (points, segments, bars, whatever)
+ * guides (axes, legends)
+ * theme (specific look of things)
+
+## Example session
+ 
+We will now use world inequality data to create a bar plot.
+
+First, we prepare the data using tidyverse.
+
+```{r wid,fig.width=8,fig.height=5,out.width="50%"}
+wid <- read_excel("Data/WIID_19Dec2018.xlsx")
+wid <- wid %>% drop_na(gini_reported, q1:q5, d1:d10)
+wid2015 <- wid %>% filter(year==2015 & 
+                          region_un == "Europe" & 
+                          population > 5e6)
+wid2015sel <- wid2015  %>% 
+  filter(quality=="High") %>%
+  filter(!duplicated(country)) %>% 
+  select(country, gini_reported, q1:q5, d1:d10)
+
+## we mess the quantiles on purpose
+data <- wid2015sel %>% 
+  gather(q1:q5, key="quantile", value="proportion") %>%
+  mutate(quantile=factor(quantile, levels=paste0("q", c(2, 1, 5, 4, 3))))
+```
+
+## Example session
+
+Now we pass the data to ggplot.
+
+```{r wid01,fig.width=8,fig.height=5,eval=FALSE,out.width="50%"}
+p <- data %>%
+  ggplot(aes(country, proportion, fill=quantile)) +
+  geom_bar(stat="identity") + coord_flip()
+p
+```
+
+ * `coord_flip()` so the bar plot is horizontal
+ * `geom_bar()` uses the `fill` esthetics
+
+## Example session
+ 
+```{r wid01,fig.width=8,fig.height=5,echo=FALSE,out.width="90%"}
+```
+
+## First, reorder the quantile factor
+
+```{r wid2,fig.width=8,fig.height=5,out.width="50%"}
+data <- data %>% mutate(quantile=factor(quantile, levels=paste0("q", 5:1)))
+p <- data %>%
+  ggplot(aes(country, proportion, fill=quantile)) +
+  geom_bar(stat="identity") + coord_flip()
+p
+```
+
+## Reorder the countries
+
+```{r wid3,fig.width=8,fig.height=5,out.width="50%"}
+data <- wid2015sel %>% 
+  mutate(country=reorder(country, desc(gini_reported))) %>%
+  gather(q1:q5, key="quantile", value="proportion") %>%
+  mutate(quantile=factor(quantile, levels=paste0("q", 5:1)))
+p <- data  %>%
+  ggplot(aes(country, proportion, fill=quantile)) +
+  geom_bar(stat="identity") + coord_flip()
+p
+```
+
+## Make it nice!
+
+```{r wid4,fig.width=8,fig.height=5,out.width="50%",eval=FALSE}
+p + theme_tufte() + scale_fill_brewer(palette="Blues") +
+  ylab("Proportion of wealth") + xlab("Country") +
+  guides(fill=guide_legend(reverse=TRUE))
+```
+
+## Make it nice!
+
+```{r wid4,fig.width=8,fig.height=5,out.width="90%",echo=FALSE}
+```
+
+
+## Exercise 4/1
+
+# Interludium: from data to figures
+
+## From data to figures
+
+ * What is the message of the figure?
+ * What data should be shown on a plot?
+ * What relationships do you want to illustrate?
+ * If it is tricky – I start with a pencil and a clean piece of paper!
 
 
 # Eine kleine Farbenlehre
@@ -330,6 +504,10 @@ wigplot(6)
 
  * What is the function of color on the plot?
  * Does the color help or distract?
+ * Do I *really* need color?
+ * If you need more than five distinct colors (I don't mean a gradient),
+   you probably are doing something
+   wrong.
 
 
 ## Representing colors
@@ -381,6 +559,8 @@ transparent; `#FF0000FF`: fully opaque.
 
 ```{r scatter,fig.width=8,fig.height=4,echo=FALSE}
 ```
+
+
 
 ## Other color systems
 
@@ -450,63 +630,340 @@ display.brewer.all()
 
 ## RColorBrewer palettes: color blind
 
-```{r rcolorbrewer2,fig.width=8,fig.height=5}
+```{r rcolorbrewer2,fig.width=8,fig.height=5,eval=FALSE}
+```
+
+## RColorBrewer palettes: color blind
+
+```{r rcolorbrewer2,fig.width=8,fig.height=5,echo=FALSE}
 par(mar=c(0,4,0,0))
 display.brewer.all(colorblindFriendly=T)
 ```
 
 ## Iris data set
 
-    data("iris")
+```r
+data("iris")
+```
 
-![](figures/iris.svg.png){width=400px}
+![](../files/iris.svg){width=600px}
 
 *The use of multiple measurements in taxonomic problems as an example of linear
 discriminant analysis.* Fisher 1936
 
+## How to use RColorBrewer with base R
+
+```{r, brewerbase,fig.width=8,fig.height=5,eval=FALSE}
+pal <- brewer.pal(3, "Dark2")
+iris$Species <- factor(iris$Species)
+cols <- pal[ iris$Species ]
+plot(iris$Sepal.Length, iris$Sepal.Width, col=cols, pch=19,
+  xlab="Sepal length", ylab="Sepal width", bty="n", cex=1.5)
+legend("topright", levels(iris$Species), col=pal, pch=19, bty="n")
+```
+
+## How to use RColorBrewer with base R
+
+```{r, brewerbase,fig.width=8,fig.height=5,echo=FALSE}
+```
+
+## RColorBrewer and ggplot
+
+You can easily use ggplot with RColorBrewer palettes:
+
+```{r pals01,eval=FALSE}
+```
 
 
-## Gallery of RColorBrewer palettes
+## Gallery of RColorBrewer palettes: Dark2
 
-```{r pals01,fig.width=8,fig.height=5}
-
+```{r pals01,fig.width=8,fig.height=5,echo=FALSE}
 ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + 
-  geom_point(size=4) + theme_tufte() + 
+  geom_point(size=4) + 
+  scale_color_brewer(palette="Dark2") + 
+  theme_tufte() + 
   theme(axis.title.y=element_text(margin=margin(0,10,0,0)), 
         axis.title.x=element_text(margin=margin(10, 0, 0, 0)))
 ```
 
-## Dark2
+## Pastel1
 
-```{r pals02,fig.width=8,fig.height=5}
+```{r pals02,fig.width=8,fig.height=5,echo=FALSE}
 ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + 
-  geom_point(size=4) + scale_color_brewer(palette="Dark2")  + theme_tufte() + 
+  geom_point(size=4) + scale_color_brewer(palette="Pastel1")  + theme_tufte() + 
   theme(axis.title.y=element_text(margin=margin(0,10,0,0)), 
         axis.title.x=element_text(margin=margin(10, 0, 0, 0)))
-
 ```
 
 
 ## Paired
 
-```{r pals03,fig.width=8,fig.height=5}
+```{r pals03,fig.width=8,fig.height=5,echo=FALSE}
 ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + 
   geom_point(size=4) + scale_color_brewer(palette="Paired") + theme_tufte() + 
   theme(axis.title.y=element_text(margin=margin(0,10,0,0)), 
         axis.title.x=element_text(margin=margin(10, 0, 0, 0)))
-
 ```
 
 ## Set2
 
-```{r pals04,fig.width=8,fig.height=5}
+```{r pals04,fig.width=8,fig.height=5,echo=FALSE}
 ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + 
   geom_point(size=4) + scale_color_brewer(palette="Set2") + theme_tufte() + 
   theme(axis.title.y=element_text(margin=margin(0,10,0,0)), 
         axis.title.x=element_text(margin=margin(10, 0, 0, 0)))
+```
 
+## The viridis scale
+
+For base R, use the following code:
+
+```{r viridis1,fig.width=8,fig.height=5}
+library(scales)
+pal <- viridis_pal()(n=6)
+show_col(pal)
+```
+
+## The viridis scale
+
+Implemented in ggplot functions:
+
+ * `scale_(color|fill)_viridis_(c|d)`
+ * `c` for continuous, `d` for discrete
+ 
+e.g. 
+
+```{r pals_viridis,fig.width=8,fig.height=5,eval=FALSE}
+ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + 
+  geom_point(size=4) + scale_color_brewer(palette="Set2") + theme_tufte() + 
+  theme(axis.title.y=element_text(margin=margin(0,10,0,0)), 
+        axis.title.x=element_text(margin=margin(10, 0, 0, 0)))
+```
+
+## The viridis scale
+
+```{r pals_viridis,fig.width=8,fig.height=5,echo=FALSE}
+```
+
+
+## Other sources
+
+ * my package `plotwidgets` implements a couple of other palettes
+ * You can always define your own colors!
+ * Use a color picker to "steal" palettes that you think are nice
+ * You can use [this tool](https://davidmathlogic.com/colorblind/) to
+   design colorblind friendly palettes
+
+## Using manual (or plotwidgets) palettes in ggplot2
+
+
+```{r plotwidgetspals,fig.width=8,fig.height=5,out.width="70%"}
+par(mar=c(0,4,0,0))
+library(plotwidgets)
+showPals()
+```
+
+## `scale_color_manual`
+
+```{r pals05,fig.width=8,fig.height=5,eval=FALSE}
+pal <- plotPals("darkhaze")
+pal
+ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + 
+  geom_point(size=4) + scale_color_manual(values=pal) + theme_tufte() + 
+  theme(axis.title.y=element_text(margin=margin(0,10,0,0)), 
+        axis.title.x=element_text(margin=margin(10, 0, 0, 0)))
+```
+
+## `scale_color_manual`
+
+```{r pals05,fig.width=8,fig.height=5,echo=FALSE}
+```
+
+
+## Continuous scales
+
+In base R, we can use `colorRampPalette()`
+
+```{r colorramp,results="markdown"}
+pal_func <- colorRampPalette(c("cyan", "black", "purple"))
+pal <- pal_func(15)
+pal
+```
+
+## Continuous scales
+
+In ggplot, there is a number of continuous scales available.
+
+ * `scale_(color|fill)_viridis_c` (viridis color scale)
+ * `scale_(color|fill)_gradient` (two colors)
+ * `scale_(color|fill)_gradient2` (three colors)
+
+The problem is with exactly defining the break points (which value
+corresponds to which color?)
+
+## Exercise 4/2
+
+# How does ggplot2 work exactly?
+
+## The weird arithmetics of ggplot
+
+## Object oriented programming
+
+ * classes of objects
+ * the same operator or function ("method") has different effects on
+   different objects
+ * for example, there are different `print` and `summary` functions called
+   depending on the type of the object to print or summarize
+ * In the OO context, a function is called a "method"
+ * Common methods such as `print`, `summary` are called "generics"
+
+## R: S3 and S4
+
+R implements two frameworks for OO programming:
+
+ * S3: easy to use, easy to understand, simple, informal
+ * S4: complex, formalized, safer
+
+Both are used in parallel.
+
+## Example: print
+
+```{r, eval=FALSE}
+class(starwars)
+print(starwars)
+print.data.frame(starwars)
+tibble:::print.tbl(starwars)
+```
+
+Although a tibble is also a data frame, the first class (`tbl`) takes
+precedence and it is displayed with the function from the `tibble` package.
+
+## What happens under the hood
+
+ * When R sees that `starwars` is an object of class `tbl`, and we call a
+   function `print` on that object, it first looks for a function called
+   `print.tbl`.
+ * Although we cannot see `print.tbl`, because it is not *attached* to our
+   namespace, it has been *loaded* with the `tibble` package and R can see
+   it.
+ * If such a function is found, it will be used.
+ * Otherwise, another class will be attempted
+ * If everything else fails, the default print method will be used
+
+
+
+## It is super easy to define your own generic methods!
+
+```{r,results="markdown"}
+v1 <- "blabla"
+## add a class, not replace
+class(v1) <- c("bulba", class(v1))
+print.bulba <- function(x, ...) {
+  cat(paste0("An object of class bulba:\n", x, "\n"))
+}
+v1
+```
+
+## It is also easy to define your own generics
+
+```{r,results="markdown"}
+nonsense <- function(x, ...) { UseMethod("nonsense", x) }
+nonsense.default <- function(x, ...) {
+  cat("Oh well, not a bulba then.\n")
+}
+nonsense.bulba <- function(x, ...) {
+  cat(paste("This", x, "is nonsense!\n"))
+}
+nonsense(v1)
+nonsense(pi)
+```
+
+## But it gets better
+
+Remember that everything is a function? 
+
+We can define generic operators to work on our class!
+
+```{r,results="markdown"}
+v1 <- "a"
+class(v1) <- c("bulba", class(v1))
+v2 <- "b"
+class(v2) <- c("bulba", class(v2))
+
+`+.bulba` <- function(a, b) {
+  ret <- paste0(a, b)
+  class(ret) <- "bulba"
+  return(ret)
+}
+
+v1 + v2
+```
+
+## And this is how ggplot works.
+
+```{r,results="markdown"}
+g1 <- ggplot(data=mtcars, aes(x=disp, y=hp, color=mpg)) +
+  geom_point(size=5) + scale_color_viridis_c()
+class(g1)
+methods(class="gg")
+methods(class="ggplot")
+methods(print) %>% { .[grep("ggplot", .)] }
+```
+
+## Exercise 3/4 (optional)
+
+
+# ggplot2 tips and tricks
+
+## Resources
+
+ * The "R Graphics Cookbook"
+ * The STHDA (sthda.com) website
+ * Stackoverflow
+
+## qplot: gentle introduction to ggplot
+
+`qplot` is an interface to `ggplot` which uses a syntax similar to the
+ basic `plot` function.
+
+## Working with themes
+
+The `theme()` and `theme_*()` functions return an object of the class
+`theme` which can be added to a ggplot in order to change appearance of
+several elements.  The list of the elements you can theme can be found in
+the `theme()` help page. You can add themes. The result is again a theme
+object that you can reuse and even set as default. This makes it easy to
+create your own themes.
+
+## ggrepel
+
+To avoid labels which are overlaping, we can use the `ggrepel` package.
+
+(Demo)
+
+## Cowplot
+
+There are two important functions in cowplot: predefined `theme_cowplot()`,
+which is quite nice, and `plot_grid()`, which rocks. `plot_grid` allows you
+to create separate plots and combine them in a number of ways. You can even
+draw a plot in basic R, record it and include it in your `plot_grid` call!
+
+Note: Cowplot defines its own theme, `theme_cowplot()` and *automatically sets it
+when loaded* (I think that is no longer the case in the newest versions).
+It stays there even if you unload the package, however you can always use
+`theme_set()` to set the default theme to something else.
+
+
+## `facet_grid`
+
+You can get a lattice-like representation using `facet_grid()` function.
+For example:
+
+
+```{r facets,fig.width=7,fig.height=3.5,echo=TRUE}
+ggplot(mpg, aes(cty, hwy)) + geom_point() + facet_grid(rows=mpg$cyl)
 ```
 
 
 
-
+## Exercise 4/4
