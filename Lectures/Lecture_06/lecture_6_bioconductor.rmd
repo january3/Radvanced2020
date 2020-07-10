@@ -1,0 +1,153 @@
+---
+title: " "
+author: "January Weiner"
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+    css: "../files/style.css"
+---
+
+
+```{r,echo=FALSE}
+## Set default options for the knitr RMD processing
+knitr::opts_chunk$set(echo=TRUE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=TRUE,autodep=TRUE)#, results="hide")
+```
+
+```{r}
+library(GenomicRanges)
+```
+
+
+
+# Bioconductor
+
+## Bioconductor
+
+ * Repository (like CRAN) with packages focused on bioinformatics
+ * Programming framework for bioinformatics
+
+## Bioconductor as repository
+
+To install Bioconductor packages, first install the BiocManager package
+from CRAN. Then, use the `install()` function from BiocManager to install
+the Bioconductor package, e.g.:
+
+```r
+install.packages(BiocManager)
+BiocManager::install("edgeR")
+```
+
+
+## Bioconductor as repository
+
+Important groups of packages in Bioconductor:
+
+ * Software:
+   * Base packages (like GenomicRanges) used by many other packages to
+     provide basic bioinformatic functionality, e.g. common functions to
+     process genomic information
+   * Analysis packages (such as `DESeq2`, `edgeR`, `DiffBind`)
+ * Annotation packages, such as `org.Hs.eg.db` or packages annotating
+   specific experimental platforms (like Illumina Beadstudio or Agilent
+   microarrays)
+ * Data packages containing curated data sets
+ * Workflow packages (pipelines) 
+
+## Bioconductor as a programming framework
+
+Bioinformatic data are large. This required optimization specifically aimed
+at the type of data that we need to handle. Bioconductor offers such
+optimized functions and classes.
+
+ * Common data types (S4 classes), such as "GRanges" or "GAlignments"
+ * Common utilities (e.g. for creating databases), such as AnnotationDBI
+
+
+## Example data types 
+
+ * `IRanges` 
+ * `GRanges`
+ * `GAlignments`
+ * `AnnotatedDataFrame`
+ * `DESeqResult`
+
+## S4 lingo
+
+S4 classes are more formalized than S3 classes. For example, they feature a
+dedicated *class constructor*, a function creating a new instance of the
+class:
+
+```{r}
+ir <- IRanges(start=seq(1, 1000, by=100), end=seq(21, 1020, by=100))
+```
+
+
+## S4 lingo
+
+S4 classes lean heavily on inheritance. E.g. DNAString inherits from
+BString, BString inherits from XString, XString inherits from character
+class.
+
+This can cause at first a lot of confusion, esp. when reading the manual
+pages. In time you will notice that you practically use only a handful of
+classes and that the rest are there for technical reasons. 
+
+## Example: GRanges
+
+```{r}
+library(Gviz)
+data(geneModels)
+head(geneModels)
+```
+
+
+## Example: GRanges
+
+```{r}
+gr <- GRanges(geneModels)
+gr
+```
+
+
+## Example: GRanges
+
+There is a number of things we can do with a GRanges object. Mostly, we
+want to extract data:
+
+```{r,results="hide"}
+seqnames(gr)
+ranges(gr)
+start(gr)
+end(gr)
+width(gr)
+```
+
+## Example: GViz
+
+```{r gviz,eval=FALSE}
+library(Gviz)
+data(cpgIslands)
+cpg_track <- AnnotationTrack(cpgIslands, name="CpG")
+gtrack <- GenomeAxisTrack()
+itrack <- IdeogramTrack(genome="hg19", chromosome="chr7")
+gentrack <- GeneRegionTrack(geneModels, genome="hg19", 
+  transcriptAnnotation = "symbol",
+  background.title = "brown",
+  chromosome="chr7", name="Genes")
+displayPars(gentrack) <- list(background.panel = "#FFFEDB", col = NULL)
+plotTracks(list(itrack, gtrack, gentrack, cpg_track))
+```
+
+
+
+## Example: GViz
+
+```{r gviz,echo=FALSE,fig.width=12,fig.height=6}
+```
+
+
+
+
+
